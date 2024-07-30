@@ -1,5 +1,7 @@
 package com.tujuhsembilan.example.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,11 +17,28 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @RestController
 @RequestMapping("/sample")
 public class SampleController {
+
+  private static final Logger logger = LoggerFactory.getLogger(SampleController.class);
+
+  @PostMapping("/log-error")
+  public void logError(@RequestBody LogMessage logMessage){
+    logger.error("FE error: {}", logMessage.getMessage());
+    logger.error("Stack Trace: {}", logMessage.getStackTrace());
+  }
+
+  @Getter
+  @Setter
+  public static class LogMessage {
+    private String message;
+    private String stackTrace;
+  }
 
   @Data
   @NoArgsConstructor
