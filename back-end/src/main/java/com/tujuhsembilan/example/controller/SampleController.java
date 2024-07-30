@@ -52,13 +52,25 @@ public class SampleController {
   }
 
   @PostMapping("/post")
-  public ResponseEntity<?> postSomething(@Valid @RequestBody SampleRequestBody body) {
-    throw new EntityNotFoundException("Test");
-  }
+    public ResponseEntity<?> postSomething(@Valid @RequestBody SampleRequestBody body) {
+        try {
+            // Your business logic here
+            throw new EntityNotFoundException("Test");
+        } catch (EntityNotFoundException e) {
+            logger.error("Entity not found: {}", e.getMessage(), e);
+            throw e; // re-throw the exception to be handled globally or by Spring
+        }
+    }
 
-  @GetMapping("/multiple-exception")
-  public ResponseEntity<?> multipleException() {
-    throw new MultipleException(new EntityNotFoundException("Test1"), new IndexOutOfBoundsException("Test2"));
-  }
+    @GetMapping("/multiple-exception")
+    public ResponseEntity<?> multipleException() {
+        try {
+            // Your business logic here
+            throw new MultipleException(new EntityNotFoundException("Test1"), new IndexOutOfBoundsException("Test2"));
+        } catch (MultipleException e) {
+            logger.error("Multiple exceptions occurred: {}", e.getMessage(), e);
+            throw e; // re-throw the exception to be handled globally or by Spring
+        }
+    }
 
 }
